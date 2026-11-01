@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InputActionValue.h"
 #include "GameFramework/PlayerController.h"
 #include "CustomPlayerController.generated.h"
 
@@ -22,8 +23,11 @@ class NEUROHALLOWEEN_API ACustomPlayerController : public APlayerController
 	GENERATED_BODY()
 
 	virtual void BeginPlay() override;
+	virtual void SetupInputComponent() override;
+	void MoveInput(const FInputActionValue& value);
+	void ActionInput(const FInputActionValue& value);
 
-	public:
+public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = InputActions)
 	UInputMappingContext* DefaultMappingContext;
 	
@@ -36,4 +40,5 @@ class NEUROHALLOWEEN_API ACustomPlayerController : public APlayerController
 	FMovementDelegate MovementDelegate;
 
 	FActionDelegate ActionDelegate;
-	};
+	
+};
