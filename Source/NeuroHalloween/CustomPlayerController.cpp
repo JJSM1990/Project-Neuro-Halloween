@@ -4,14 +4,22 @@
 #include "CustomPlayerController.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "GameCamera.h"
+#include "PlayerCharacter.h"
+#include "Camera/CameraActor.h"
 
 void ACustomPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+	
 	if (UEnhancedInputLocalPlayerSubsystem* EnhancedInputLocalPlayerSubsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
 		EnhancedInputLocalPlayerSubsystem->AddMappingContext(DefaultMappingContext,0);
 	}
+	
+	CameraActor= GetWorld()->SpawnActor<AGameCamera>(GetPawn()->GetActorLocation(), GetPawn()-> GetActorRotation());
+	SetViewTarget(CameraActor);
+	CameraActor->ReceivePlayer(Cast<APlayerCharacter>(GetPawn()));
 }
 
 void ACustomPlayerController::SetupInputComponent() 
@@ -37,4 +45,15 @@ void ACustomPlayerController::ActionInput(const FInputActionValue &value)
 {
 	bool bAction = value.Get<bool>();
 	ActionDelegate.Execute(bAction);
+}
+
+void ACustomPlayerController::NewRoomEntered(FTransform newCameraTransform, UBoxComponent* newCameraLimits)
+{
+	if (CameraActor == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("CameraActor NULLPTR"))
+		return;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Calling GameCamera"))
+		CameraActor->UpdatePosition(newCameraTransform, newCameraLimits);
 }

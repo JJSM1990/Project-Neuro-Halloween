@@ -3,9 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/Actor.h"
 #include "GameCamera.generated.h"
 
+//Forward Declares
+class UCameraComponent;
+class APlayerCharacter;
 UCLASS()
 class NEUROHALLOWEEN_API AGameCamera : public AActor
 {
@@ -22,5 +26,23 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	void ReceivePlayer(APlayerCharacter* playerCharacter);
+	void UpdatePosition(FTransform newTranform, UBoxComponent* CameraLimits);
+	void UpdateCameraCompLocationTick(float deltaTime);
+	void UpdateCameraRotation();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCameraComponent* CameraComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	USceneComponent* RootEmpty;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	APlayerCharacter* PlayerCharacter;
+
+	bool RoomActive;
+	float XLimit, YLimit, ZLimit;
+	float deltaX, deltaY, deltaZ;
 
 };
+

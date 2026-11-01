@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "CustomPlayerController.generated.h"
 
@@ -11,6 +12,7 @@
 //Forward Declares
 class UInputMappingContext;
 class UInputAction;
+class AGameCamera;
 
 //Delegate declaration 
 DECLARE_DELEGATE_OneParam(FMovementDelegate, FVector2D);
@@ -26,8 +28,10 @@ class NEUROHALLOWEEN_API ACustomPlayerController : public APlayerController
 	virtual void SetupInputComponent() override;
 	void MoveInput(const FInputActionValue& value);
 	void ActionInput(const FInputActionValue& value);
-
+	
 public:
+	void NewRoomEntered(FTransform newCameraTransform, UBoxComponent* newCameraLimits);
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = InputActions)
 	UInputMappingContext* DefaultMappingContext;
 	
@@ -40,5 +44,8 @@ public:
 	FMovementDelegate MovementDelegate;
 
 	FActionDelegate ActionDelegate;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	AGameCamera* CameraActor;
 	
 };

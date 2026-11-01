@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
-
+class ACustomPlayerController;
 UCLASS()
 class NEUROHALLOWEEN_API APlayerCharacter : public ACharacter
 {
@@ -27,6 +28,15 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	UFUNCTION()
-	void Move(FVector2D InputDirection);
+	void Move(FVector2D InputDirection) const;
+	UFUNCTION()
+	void Action(bool bAction);
+	UFUNCTION(BlueprintCallable, Category = CameraMovement)
+	void NewRoom(FTransform NewCameraBaseTransform, UBoxComponent* newCameraLimits);
 
+	FVector RoomForwardVector;
+	FVector RoomRightVector;
+
+	ACustomPlayerController* GameController;
+	
 };
