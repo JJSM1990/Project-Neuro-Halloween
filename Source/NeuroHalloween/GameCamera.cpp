@@ -21,7 +21,7 @@ AGameCamera::AGameCamera()
 	CameraComp->SetupAttachment(RootEmpty);
 	RoomActive = false;
 	deltaZ = 100.f;
-	deltaX = -300.f;
+	deltaX = -700.f;
 	deltaY = 0.f;
 }
 
@@ -36,6 +36,13 @@ void AGameCamera::BeginPlay()
 void AGameCamera::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (PlayerCharacter != nullptr)
+	{
+		PlayerLocation = PlayerCharacter->GetActorLocation();
+	} else
+	{
+		PlayerLocation = FVector::ZeroVector;
+	}
 	UpdateCameraCompLocationTick(DeltaTime);
 	UpdateCameraRotation();
 }
@@ -62,7 +69,7 @@ void AGameCamera::UpdatePosition(FTransform newTranform, UBoxComponent* CameraLi
 void AGameCamera::UpdateCameraCompLocationTick(float deltaTime)
 {
 	FVector CurrentLocation = CameraComp->GetRelativeLocation();
-	CameraComp->SetWorldLocation(PlayerCharacter->GetActorLocation());
+	CameraComp->SetWorldLocation(PlayerLocation);
 	FVector CameraCompRelativeLocation = CameraComp->GetRelativeLocation() + FVector(deltaX, deltaY, deltaZ);
 	
 	if (CameraCompRelativeLocation.X > XLimit)
@@ -88,7 +95,7 @@ void AGameCamera::UpdateCameraCompLocationTick(float deltaTime)
 	{
 		CameraCompRelativeLocation.Z = -ZLimit;
 	}
-	UE_LOG(LogTemp, Display, TEXT("CameraCompRelativeLocation: %f, %f, %f"), CameraCompRelativeLocation.X, CameraCompRelativeLocation.Y, CameraCompRelativeLocation.Z );
+	
 	CameraComp->SetRelativeLocation(UKismetMathLibrary::VInterpTo (CurrentLocation, CameraCompRelativeLocation, deltaTime, 5.f));
 }
 
@@ -97,7 +104,7 @@ void AGameCamera::UpdateCameraRotation()
 	FRotator NewCameraRotation = FRotator::ZeroRotator;
 	if (PlayerCharacter != nullptr)
 	{
-		NewCameraRotation = (PlayerCharacter->GetActorLocation()-CameraComp->GetComponentLocation()).Rotation();
+		NewCameraRotation = (PlayerLocation-CameraComp->GetComponentLocation()).Rotation();
 		CameraComp -> SetWorldRotation(NewCameraRotation);
 	}
 

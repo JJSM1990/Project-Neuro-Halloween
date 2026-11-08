@@ -5,6 +5,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameCamera.h"
+#include "GameCameraZoom.h"
 #include "PlayerCharacter.h"
 #include "Camera/CameraActor.h"
 
@@ -17,7 +18,7 @@ void ACustomPlayerController::BeginPlay()
 		EnhancedInputLocalPlayerSubsystem->AddMappingContext(DefaultMappingContext,0);
 	}
 	
-	CameraActor= GetWorld()->SpawnActor<AGameCamera>(GetPawn()->GetActorLocation(), GetPawn()-> GetActorRotation());
+	CameraActor= GetWorld()->SpawnActor<AGameCameraZoom>(GetPawn()->GetActorLocation(), GetPawn()-> GetActorRotation());
 	SetViewTarget(CameraActor);
 	CameraActor->ReceivePlayer(Cast<APlayerCharacter>(GetPawn()));
 }

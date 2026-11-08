@@ -43,6 +43,6 @@ public:
 	bool RoomActive;
 	float XLimit, YLimit, ZLimit;
 	float deltaX, deltaY, deltaZ;
-
+	FVector PlayerLocation;
 };
 

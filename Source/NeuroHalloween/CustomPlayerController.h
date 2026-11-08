@@ -12,7 +12,7 @@
 //Forward Declares
 class UInputMappingContext;
 class UInputAction;
-class AGameCamera;
+class AGameCameraZoom;
 
 //Delegate declaration 
 DECLARE_DELEGATE_OneParam(FMovementDelegate, FVector2D);
@@ -46,6 +46,6 @@ public:
 	FActionDelegate ActionDelegate;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	AGameCamera* CameraActor;
+	AGameCameraZoom* CameraActor;
 	
 };
