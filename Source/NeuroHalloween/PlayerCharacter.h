@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 class ACustomPlayerController;
+class USphereComponent;
 UCLASS()
 class NEUROHALLOWEEN_API APlayerCharacter : public ACharacter
 {
@@ -36,6 +37,12 @@ public:
 
 	FVector RoomForwardVector;
 	FVector RoomRightVector;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float InteractionLength;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	USphereComponent* SphereComponent;
 
 	ACustomPlayerController* GameController;
 	

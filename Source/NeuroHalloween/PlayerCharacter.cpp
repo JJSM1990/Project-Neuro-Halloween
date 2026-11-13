@@ -4,7 +4,11 @@
 #include "PlayerCharacter.h"
 
 #include "CustomPlayerController.h"
+#include "IInteractableObject.h"
+#include "Animation/AnimInstanceProxy.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 // Sets default values
@@ -12,22 +16,22 @@ APlayerCharacter::APlayerCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	RoomForwardVector = FVector::ZeroVector;
-	RoomRightVector = FVector::ZeroVector;
+	SphereComponent = CreateDefaultSubobject<USphereComponent>("InteractionSphere");
+	SphereComponent->SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
+	RoomForwardVector = FVector::ZeroVector;
+	RoomRightVector = FVector::ZeroVector;
 	GameController = Cast<ACustomPlayerController>(GetController());
 	if (GameController != nullptr)
 	{
 		GameController->MovementDelegate.BindUObject(this, &APlayerCharacter::Move);
 		GameController->ActionDelegate.BindUObject(this, &APlayerCharacter::Action);
 	}
-
 }
 
 // Called every frame
@@ -50,15 +54,31 @@ void APlayerCharacter::Move(FVector2D InputDirection) const
 		MovementDirection = MovementDirection.GetSafeNormal();
 	}
 	GetCharacterMovement() -> AddInputVector(MovementDirection);
-	DrawDebugDirectionalArrow(GetWorld(), GetActorLocation(), GetActorLocation()+ MovementDirection*200, 5, FColor::Red);
-	DrawDebugDirectionalArrow(GetWorld(), GetActorLocation(), GetActorLocation()+ GetActorForwardVector()*200, 5, FColor::Green);
 }
 
 void APlayerCharacter::Action(bool bAction)
 {
+	UE_LOG(LogTemp, Display, TEXT("Action"));
 	if (bAction)
 	{
-		//Por Hacer
+		TArray<AActor*> OverlappingActors;
+		SphereComponent->GetOverlappingActors(OverlappingActors);
+		if (OverlappingActors.Num() > 0)
+		{
+			for (AActor* OverlappingActor : OverlappingActors)
+			{
+				UE_LOG(LogTemp, Display, TEXT("Overlapping Actors"));
+				if (OverlappingActor->Implements<UIInteractableObject>())
+				{
+					UE_LOG(LogTemp, Display, TEXT("Calling Object Interaction"));
+					Cast<IIInteractableObject>(OverlappingActor) -> ObjectInteraction();
+				}
+			}
+		} else
+		{
+			UE_LOG(LogTemp, Display, TEXT("Actors Not Found"));
+		}
+
 	}
 }
 

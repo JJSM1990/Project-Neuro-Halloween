@@ -33,6 +33,7 @@ void ACustomPlayerController::SetupInputComponent()
 		EnhancedInput->BindAction(IAMove, ETriggerEvent::Canceled, this , &ACustomPlayerController::MoveInput);
 
 		EnhancedInput->BindAction(IAAction, ETriggerEvent::Started, this , &ACustomPlayerController::ActionInput);
+		EnhancedInput->BindAction(IAMove, ETriggerEvent::Canceled, this , &ACustomPlayerController::ActionInput);
 	}
 	
 }

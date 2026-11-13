@@ -39,7 +39,7 @@ void AGameCameraZoom::UpdateCameraZoom(float distanceToPlayerFromCamera, float m
 	}
 	
 	float FOVLossTarget = maxFOVChange * distanceRatio;
-	camera->FieldOfView = UKismetMathLibrary::FInterpTo(camera->FieldOfView, initialFOV-FOVLossTarget, deltaTime, 10 );
+	camera->FieldOfView = UKismetMathLibrary::FInterpTo(camera->FieldOfView, initialFOV-FOVLossTarget, deltaTime, 2 );
 
 	
 	
